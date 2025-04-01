@@ -126,7 +126,15 @@ document.addEventListener("touchstart", tryAutoPlayBGM, { once: true });
 
 
 const bgm = document.getElementById("bgm");
-
+function toggleBGM() {
+  if (bgm.paused) {
+    bgm.play().catch((err) => {
+      console.log("背景音樂播放失敗", err);
+    });
+  } else {
+    bgm.pause();
+  }
+}
 
 
 let hasPlayedVoice = false;
@@ -166,7 +174,15 @@ document.addEventListener("touchstart", tryAutoPlayBGM, { once: true });
 
 
 const bgm = document.getElementById("bgm");
-
+function toggleBGM() {
+  if (bgm.paused) {
+    bgm.play().catch((err) => {
+      console.log("背景音樂播放失敗", err);
+    });
+  } else {
+    bgm.pause();
+  }
+}
 
 
 let hasPlayedVoice = false;
@@ -220,7 +236,15 @@ document.addEventListener("touchstart", tryAutoPlayBGM, { once: true });
 
 
 const bgm = document.getElementById("bgm");
-
+function toggleBGM() {
+  if (bgm.paused) {
+    bgm.play().catch((err) => {
+      console.log("背景音樂播放失敗", err);
+    });
+  } else {
+    bgm.pause();
+  }
+}
 
 
 let hasPlayedVoice = false;
@@ -240,7 +264,7 @@ document.getElementById("nameInput").addEventListener("focus", () => {
   </script>
 
 
-<!-- 已移除播放按鈕 --> style="position: fixed; bottom: 20px; right: 20px; z-index:1000;">播放/暫停音樂</button>
+<button onclick="toggleBGM()" style="position: fixed; bottom: 20px; right: 20px; z-index:1000;">播放/暫停音樂</button>
 
 
 
