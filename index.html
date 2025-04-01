@@ -106,6 +106,12 @@
     }
 
     function spinWheel() {
+  const winSound = document.getElementById("win-sound");
+  if (winSound) {
+    winSound.currentTime = 0;
+    winSound.play().catch(err => console.warn("音效播放被拒絕：", err));
+  }
+
       if (spinning) return;
       const name = document.getElementById("nameInput").value.trim();
       if (!name) return alert("請輸入姓名！");
@@ -136,12 +142,14 @@
         result.innerHTML = `<strong>${name}</strong> 抽中了 <strong>${selected.id}. ${selected.name}</strong>`;
         drawWheel();
 
-// 點一下畫面「解鎖音效播放權限」
-document.body.addEventListener('click', () => {
+// 解鎖 iOS Safari 音效播放權限（第一次觸碰）
+document.body.addEventListener("touchstart", () => {
   const audio = document.getElementById("win-sound");
   if (audio && audio.paused) {
+    audio.muted = true;
     audio.play().then(() => {
       audio.pause();
+      audio.muted = false;
       audio.currentTime = 0;
     }).catch(() => {});
   }
@@ -149,12 +157,14 @@ document.body.addEventListener('click', () => {
  startConfetti();
         setTimeout(() => { highlightIds = []; drawWheel();
 
-// 點一下畫面「解鎖音效播放權限」
-document.body.addEventListener('click', () => {
+// 解鎖 iOS Safari 音效播放權限（第一次觸碰）
+document.body.addEventListener("touchstart", () => {
   const audio = document.getElementById("win-sound");
   if (audio && audio.paused) {
+    audio.muted = true;
     audio.play().then(() => {
       audio.pause();
+      audio.muted = false;
       audio.currentTime = 0;
     }).catch(() => {});
   }
@@ -172,12 +182,14 @@ document.body.addEventListener('click', () => {
         canvas.style.transform = "rotate(0deg)";
         result.innerHTML = ""; history.innerHTML = ""; drawWheel();
 
-// 點一下畫面「解鎖音效播放權限」
-document.body.addEventListener('click', () => {
+// 解鎖 iOS Safari 音效播放權限（第一次觸碰）
+document.body.addEventListener("touchstart", () => {
   const audio = document.getElementById("win-sound");
   if (audio && audio.paused) {
+    audio.muted = true;
     audio.play().then(() => {
       audio.pause();
+      audio.muted = false;
       audio.currentTime = 0;
     }).catch(() => {});
   }
@@ -188,12 +200,14 @@ document.body.addEventListener('click', () => {
 
     drawWheel();
 
-// 點一下畫面「解鎖音效播放權限」
-document.body.addEventListener('click', () => {
+// 解鎖 iOS Safari 音效播放權限（第一次觸碰）
+document.body.addEventListener("touchstart", () => {
   const audio = document.getElementById("win-sound");
   if (audio && audio.paused) {
+    audio.muted = true;
     audio.play().then(() => {
       audio.pause();
+      audio.muted = false;
       audio.currentTime = 0;
     }).catch(() => {});
   }
