@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#5d4037" />
   <style>
-    html, body { margin:0; padding:0; font-family: "Segoe UI", sans-serif; background:#ffffff; color:#4e342e; text-align:center; }
+    html, body { margin:0; padding:0; font-family: "Segoe UI", sans-serif; background:#fefae0; color:#4e342e; text-align:center; }
     header { padding:20px 10px 10px; }
     .title { font-size:22px; font-weight:bold; }
     .subtitle { font-size:18px; margin-top:5px; }
@@ -28,15 +28,30 @@
       border:1px solid #d7ccc8; border-radius:8px; padding:10px; text-align:left;
     }
   
-
-
-
+#confetti-canvas {
+  position: fixed;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+}
 
 body {
   background-image: url('dragon_runner_bg.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
+}
+
+
+#wheel-canvas {
+  width: 90vw;
+  max-width: 420px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
 }
 
 
@@ -50,20 +65,10 @@ body {
   z-index: 999;
 }
 
-
-#wheel-canvas {
-  width: 90vw;
-  max-width: 420px;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-}
-
 </style>
 
-
 </head>
-<body >
+<body onclick='speechSynthesis.cancel()'>
   <header>
     <div class="title">舊城國小蓮潭路跑使命必站轉轉樂</div>
     <div class="subtitle">看看轉到哪個幸運站！</div>
@@ -73,13 +78,12 @@ body {
     <button id="spinButton">開始抽籤</button>
   </div>
   <div id="wheel-container">
-    
     <canvas id="wheel" width="500" height="500"></canvas>
   </div>
   <div id="result"></div>
   <div id="history"></div>
   <button id="resetButton">重置抽籤</button>
-  
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script>
     const stations = [
       { id: 1, name: "勝利路公廁" }, { id: 2, name: "勝利路工程施工旁" }, { id: 3, name: "勝利路施工處" },
@@ -116,18 +120,17 @@ body {
       });
     }
 
-    
-    
-);
-  (function frame() {
-    confettiInstance({ particleCount: 7, angle: 60, spread: 55, origin: { x: 0 } });
-    confettiInstance({ particleCount: 7, angle: 120, spread: 55, origin: { x: 1 } });
-    if (Date.now() < end) requestAnimationFrame(frame);
-  })();
-}
+    function startConfetti() {
+      const duration = 2000, end = Date.now() + duration;
+      const confettiInstance = confetti.create(document.getElementById('confetti-canvas'), { resize: true });
+      (function frame() {
+        confettiInstance({ particleCount: 7, angle: 60, spread: 55, origin: { x: 0 } });
+        confettiInstance({ particleCount: 7, angle: 120, spread: 55, origin: { x: 1 } });
+        if (Date.now() < end) requestAnimationFrame(frame);
+      })();
+    }
 
-
-function spinWheel() {
+    function spinWheel() {
       if (spinning) return;
       const name = document.getElementById("nameInput").value.trim();
       if (!name) return alert("請輸入姓名！");
@@ -156,8 +159,8 @@ function spinWheel() {
         const msg = new SpeechSynthesisUtterance(text);
         msg.lang = 'zh-TW';
         setTimeout(() => speechSynthesis.speak(msg), 100);
-        drawWheel(); startConfetti();  
-        setTimeout(() => { highlightIds = []; drawWheel();  }, 2000);
+        drawWheel(); startConfetti(); startConfetti();
+        setTimeout(() => { highlightIds = []; drawWheel(); startConfetti(); }, 2000);
         spinning = false;
       }, 5200);
     }
@@ -168,57 +171,13 @@ function spinWheel() {
         drawnIds = []; drawnIcons = {}; highlightIds = [];
         availableIcons = [...icons]; rotation = 0;
         canvas.style.transform = "rotate(0deg)";
-        result.innerHTML = ""; history.innerHTML = ""; drawWheel(); startConfetti(); 
+        result.innerHTML = ""; history.innerHTML = ""; drawWheel(); startConfetti();
       }
     };
 
-    drawWheel(); startConfetti(); 
+    drawWheel(); startConfetti();
   </script>
-
-
-
-<script>
-const confetti = (() => {
-  const canvas = document.createElement('canvas');
-  canvas.setAttribute('id', 'confetti-canvas');
-  Object.assign(canvas.style, {
-    position: 'fixed', pointerEvents: 'none', top: 0, left: 0,
-    width: '100%', height: '100%', zIndex: 999
-  });
-  document.body.appendChild(canvas);
-  const ctx = canvas.getContext('2d');
-  const particles = Array.from({length: 150}, () => ({
-    x: Math.random() * window.innerWidth,
-    y: Math.random() * window.innerHeight - window.innerHeight,
-    r: Math.random() * 6 + 4,
-    d: Math.random() * 30 + 10,
-    color: `hsl(${Math.random() * 360}, 100%, 70%)`,
-    tilt: Math.random() * 10 - 10
-  }));
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach(p => {
-      ctx.beginPath();
-      ctx.fillStyle = p.color;
-      ctx.ellipse(p.x, p.y, p.r, p.r / 2, p.tilt, 0, 2 * Math.PI);
-      ctx.fill();
-    });
-    move();
-  }
-  function move() {
-    particles.forEach(p => {
-      p.y += p.d / 10;
-      if (p.y > window.innerHeight) p.y = -10;
-    });
-  }
-  function loop() {
-    draw();
-    requestAnimationFrame(loop);
-  }
-  return () => loop();
-})();
-</script>
-
+<canvas id="confetti-canvas"></canvas>
 <canvas id="confetti-canvas"></canvas>
 
 <script>
