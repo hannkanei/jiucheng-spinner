@@ -148,7 +148,7 @@ function spinWheel() {
         msg.lang = 'zh-TW';
         setTimeout(() => speechSynthesis.speak(msg), 100);
         drawWheel(); startConfetti();  
-        setTimeout(() => { highlightIds = []; drawWheel(); startConfetti();  }, 2000);
+        setTimeout(() => { highlightIds = []; drawWheel();  }, 2000);
         spinning = false;
       }, 5200);
     }
