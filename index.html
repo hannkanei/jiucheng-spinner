@@ -126,7 +126,7 @@
       const selected = remaining[Math.floor(Math.random() * remaining.length)];
       const index = stations.findIndex(s => s.id === selected.id);
       const anglePerItem = 360 / stations.length;
-      rotation = 360 * 5 + (360 - (index * anglePerItem + anglePerItem / 2));
+      rotation += 360 * 5 + (360 - (index * anglePerItem + anglePerItem / 2));
       canvas.style.transform = `rotate(${rotation}deg)`;
 
       setTimeout(() => {
