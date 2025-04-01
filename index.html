@@ -108,6 +108,21 @@
           console.log("音效播放失敗：", error);
         });
         drawWheel();
+
+let hasPlayedVoice = false;
+document.getElementById("nameInput").addEventListener("input", () => {
+  if (!hasPlayedVoice && chime) {
+    chime.pause();
+    chime.currentTime = 0;
+    chime.play().then(() => {
+      console.log("語音已播放");
+    }).catch((err) => {
+      console.log("語音播放失敗", err);
+    });
+    hasPlayedVoice = true;
+  }
+});
+
         startConfetti();
         setTimeout(() => { highlight = []; chime.pause();
         chime.currentTime = 0;
@@ -116,7 +131,22 @@
         }).catch((error) => {
           console.log("音效播放失敗：", error);
         });
-        drawWheel(); }, 2000);
+        drawWheel();
+
+let hasPlayedVoice = false;
+document.getElementById("nameInput").addEventListener("input", () => {
+  if (!hasPlayedVoice && chime) {
+    chime.pause();
+    chime.currentTime = 0;
+    chime.play().then(() => {
+      console.log("語音已播放");
+    }).catch((err) => {
+      console.log("語音播放失敗", err);
+    });
+    hasPlayedVoice = true;
+  }
+});
+ }, 2000);
         spinning = false;
       }, 5200);
     }
@@ -140,6 +170,21 @@
           console.log("音效播放失敗：", error);
         });
         drawWheel();
+
+let hasPlayedVoice = false;
+document.getElementById("nameInput").addEventListener("input", () => {
+  if (!hasPlayedVoice && chime) {
+    chime.pause();
+    chime.currentTime = 0;
+    chime.play().then(() => {
+      console.log("語音已播放");
+    }).catch((err) => {
+      console.log("語音播放失敗", err);
+    });
+    hasPlayedVoice = true;
+  }
+});
+
   </script>
 </body>
 </html>
