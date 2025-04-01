@@ -41,6 +41,7 @@
 
 </style>
 
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body >
   <header>
@@ -96,7 +97,19 @@
     }
 
     
-    function spinWheel() {
+    
+function startConfetti() {
+  const duration = 2000, end = Date.now() + duration;
+  const confettiInstance = confetti.create(document.getElementById('confetti-canvas'), { resize: true });
+  (function frame() {
+    confettiInstance({ particleCount: 7, angle: 60, spread: 55, origin: { x: 0 } });
+    confettiInstance({ particleCount: 7, angle: 120, spread: 55, origin: { x: 1 } });
+    if (Date.now() < end) requestAnimationFrame(frame);
+  })();
+}
+
+
+function spinWheel() {
       if (spinning) return;
       const name = document.getElementById("nameInput").value.trim();
       if (!name) return alert("請輸入姓名！");
@@ -125,8 +138,8 @@
         const msg = new SpeechSynthesisUtterance(text);
         msg.lang = 'zh-TW';
         setTimeout(() => speechSynthesis.speak(msg), 100);
-        drawWheel(); 
-        setTimeout(() => { highlightIds = []; drawWheel(); }, 2000);
+        drawWheel(); startConfetti(); 
+        setTimeout(() => { highlightIds = []; drawWheel(); startConfetti(); }, 2000);
         spinning = false;
       }, 5200);
     }
@@ -137,12 +150,13 @@
         drawnIds = []; drawnIcons = {}; highlightIds = [];
         availableIcons = [...icons]; rotation = 0;
         canvas.style.transform = "rotate(0deg)";
-        result.innerHTML = ""; history.innerHTML = ""; drawWheel();
+        result.innerHTML = ""; history.innerHTML = ""; drawWheel(); startConfetti();
       }
     };
 
-    drawWheel();
+    drawWheel(); startConfetti();
   </script>
 
+<canvas id="confetti-canvas"></canvas>
 </body>
 </html>
