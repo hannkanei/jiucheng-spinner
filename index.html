@@ -109,6 +109,30 @@
         });
         drawWheel();
 
+function tryAutoPlayBGM() {
+  bgm.volume = 0.5;
+  bgm.play().then(() => {
+    console.log("背景音樂自動播放成功");
+  }).catch((e) => {
+    console.log("背景音樂被封鎖，等待互動觸發");
+  });
+}
+document.addEventListener("click", tryAutoPlayBGM, { once: true });
+document.addEventListener("touchstart", tryAutoPlayBGM, { once: true });
+
+
+const bgm = document.getElementById("bgm");
+function toggleBGM() {
+  if (bgm.paused) {
+    bgm.play().catch((err) => {
+      console.log("背景音樂播放失敗", err);
+    });
+  } else {
+    bgm.pause();
+  }
+}
+
+
 let hasPlayedVoice = false;
 document.getElementById("nameInput").addEventListener("focus", () => {
   if (!hasPlayedVoice && chime) {
@@ -132,6 +156,30 @@ document.getElementById("nameInput").addEventListener("focus", () => {
           console.log("音效播放失敗：", error);
         });
         drawWheel();
+
+function tryAutoPlayBGM() {
+  bgm.volume = 0.5;
+  bgm.play().then(() => {
+    console.log("背景音樂自動播放成功");
+  }).catch((e) => {
+    console.log("背景音樂被封鎖，等待互動觸發");
+  });
+}
+document.addEventListener("click", tryAutoPlayBGM, { once: true });
+document.addEventListener("touchstart", tryAutoPlayBGM, { once: true });
+
+
+const bgm = document.getElementById("bgm");
+function toggleBGM() {
+  if (bgm.paused) {
+    bgm.play().catch((err) => {
+      console.log("背景音樂播放失敗", err);
+    });
+  } else {
+    bgm.pause();
+  }
+}
+
 
 let hasPlayedVoice = false;
 document.getElementById("nameInput").addEventListener("focus", () => {
@@ -171,6 +219,30 @@ document.getElementById("nameInput").addEventListener("focus", () => {
         });
         drawWheel();
 
+function tryAutoPlayBGM() {
+  bgm.volume = 0.5;
+  bgm.play().then(() => {
+    console.log("背景音樂自動播放成功");
+  }).catch((e) => {
+    console.log("背景音樂被封鎖，等待互動觸發");
+  });
+}
+document.addEventListener("click", tryAutoPlayBGM, { once: true });
+document.addEventListener("touchstart", tryAutoPlayBGM, { once: true });
+
+
+const bgm = document.getElementById("bgm");
+function toggleBGM() {
+  if (bgm.paused) {
+    bgm.play().catch((err) => {
+      console.log("背景音樂播放失敗", err);
+    });
+  } else {
+    bgm.pause();
+  }
+}
+
+
 let hasPlayedVoice = false;
 document.getElementById("nameInput").addEventListener("focus", () => {
   if (!hasPlayedVoice && chime) {
@@ -186,5 +258,9 @@ document.getElementById("nameInput").addEventListener("focus", () => {
 });
 
   </script>
+
+<audio id="bgm" src="chime.mp3" loop preload="auto"></audio>
+<button onclick="toggleBGM()" style="position: fixed; bottom: 20px; right: 20px; z-index:1000;">播放/暫停音樂</button>
+
 </body>
 </html>
