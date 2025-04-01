@@ -7,8 +7,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     html, body {
-  background: url('background.jpg') no-repeat center center fixed;
-  background-size: cover; margin:0; padding:0; font-family: "Segoe UI", sans-serif; background:#fefae0; color:#4e342e; text-align:center; }
+  background-image: url('background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; margin:0; padding:0; font-family: "Segoe UI", sans-serif; background:#fefae0; color:#4e342e; text-align:center; }
     header { padding:20px 10px 10px; }
     .title { font-size:22px; font-weight:bold; }
     .subtitle { font-size:18px; margin-top:5px; }
@@ -124,15 +126,7 @@ document.addEventListener("touchstart", tryAutoPlayBGM, { once: true });
 
 
 const bgm = document.getElementById("bgm");
-function toggleBGM() {
-  if (bgm.paused) {
-    bgm.play().catch((err) => {
-      console.log("背景音樂播放失敗", err);
-    });
-  } else {
-    bgm.pause();
-  }
-}
+
 
 
 let hasPlayedVoice = false;
@@ -172,15 +166,7 @@ document.addEventListener("touchstart", tryAutoPlayBGM, { once: true });
 
 
 const bgm = document.getElementById("bgm");
-function toggleBGM() {
-  if (bgm.paused) {
-    bgm.play().catch((err) => {
-      console.log("背景音樂播放失敗", err);
-    });
-  } else {
-    bgm.pause();
-  }
-}
+
 
 
 let hasPlayedVoice = false;
@@ -234,15 +220,7 @@ document.addEventListener("touchstart", tryAutoPlayBGM, { once: true });
 
 
 const bgm = document.getElementById("bgm");
-function toggleBGM() {
-  if (bgm.paused) {
-    bgm.play().catch((err) => {
-      console.log("背景音樂播放失敗", err);
-    });
-  } else {
-    bgm.pause();
-  }
-}
+
 
 
 let hasPlayedVoice = false;
