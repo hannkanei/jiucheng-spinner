@@ -13,17 +13,19 @@
 </head>
 <body>
   <h1>舊城國小蓮潭路跑使命必站轉轉樂</h1>
-  <p>輸入姓名後點擊抽籤，將會播放語音</p>
+  <p>輸入姓名後點擊抽籤</p>
   <input type="text" id="nameInput" placeholder="輸入姓名">
   <button id="spinButton">開始抽籤</button>
   <p id="result"></p>
-  <audio id="audio" src="audio.mp3"></audio>
+  <audio id="chime" src="chime.mp3" preload="auto"></audio>
   <script>
+    const chime = document.getElementById("chime");
     document.getElementById("spinButton").onclick = () => {
       const name = document.getElementById("nameInput").value.trim();
       if (!name) return alert("請先輸入姓名！");
       document.getElementById("result").innerText = `${name} 抽中一個任務站位！`;
-      document.getElementById("audio").play();
+      chime.currentTime = 0;
+      chime.play().catch(e => console.log("音效播放失敗：", e));
     };
   </script>
 </body>
