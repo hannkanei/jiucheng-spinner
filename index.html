@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     html, body {
-  background-image: url('background.jpg');
+  background-image: url('lotus_background.png');
   background-size: cover;
   background-position: center;
   background-attachment: fixed; margin:0; padding:0; font-family: "Segoe UI", sans-serif; background:#fefae0; color:#4e342e; text-align:center; }
@@ -38,7 +38,7 @@
   <div id="wheel-container"><canvas id="wheel" width="500" height="500"></canvas></div>
   <div id="result"></div>
   <div id="history"></div>
-  <audio id="chime" src="chime.mp3" preload="auto"></audio>
+  <audio id="chime" src="chime.mp3" playsinline></audio>
   <canvas id="confetti-canvas"></canvas>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script>
@@ -240,7 +240,7 @@ document.getElementById("nameInput").addEventListener("focus", () => {
   </script>
 
 
-<button onclick="toggleBGM()" style="position: fixed; bottom: 20px; right: 20px; z-index:1000;">播放/暫停音樂</button>
+<!-- 已移除播放按鈕 --> style="position: fixed; bottom: 20px; right: 20px; z-index:1000;">播放/暫停音樂</button>
 
 
 
