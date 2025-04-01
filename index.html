@@ -14,22 +14,19 @@
       background-position: center;
       background-attachment: fixed;
       text-align: center;
-      background-color: #f5f5dc; /* 米色背景 */
+      background-color: #f5f5dc;
     }
-
     h1 {
       margin-top: 20px;
       font-size: 24px;
-      color: #3e2723; /* 咖啡色文字 */
+      color: #3e2723;
     }
-
     #name-input {
       font-size: 18px;
       padding: 6px;
       margin: 10px;
-      background-color: #d7ccc8; /* 淺咖啡色背景 */
+      background-color: #d7ccc8;
     }
-
     button {
       font-size: 18px;
       padding: 10px 20px;
@@ -38,7 +35,6 @@
       border-radius: 8px;
       color: white;
     }
-
     #result {
       position: fixed;
       bottom: 20%;
@@ -53,28 +49,12 @@
       z-index: 1000;
       display: none;
     }
-
     #wheel-canvas {
       width: 90vw;
       max-width: 420px;
       height: auto;
       display: block;
       margin: 0 auto;
-    }
-
-    #history {
-      position: fixed;
-      bottom: 10%;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(255, 255, 255, 0.9);
-      color: #3e2723;
-      padding: 10px 20px;
-      border-radius: 12px;
-      font-size: 16px;
-      max-height: 150px;
-      overflow-y: auto;
-      z-index: 999;
     }
   </style>
 </head>
@@ -85,33 +65,20 @@
   <canvas id="wheel-canvas"></canvas>
   <canvas id="confetti-canvas"></canvas>
   <div id="result"></div>
-  <div id="history"></div>
+  <audio id="confetti-sound" src="ttsmaker-file-2025-4-2-0-22-36.mp3" preload="auto"></audio>
 
   <script>
     const stations = [
-      { id: 1, name: "勝利路公廁" },
-      { id: 2, name: "勝利路工程施工旁" },
-      { id: 3, name: "勝利路施工處" },
-      { id: 4, name: "勝利路餐廳前" },
-      { id: 5, name: "空白" },
-      { id: 6, name: "通天柱" },
-      { id: 7, name: "蓮潭運動中心" },
-      { id: 8, name: "蓮潭運動中心旁公廁" },
-      { id: 9, name: "清水師爺前方" },
-      { id: 10, name: "涼亭前" },
-      { id: 11, name: "截流站" },
-      { id: 12, name: "哈囉市場（自在蔬食對面）" },
-      { id: 13, name: "孔廟後面（近哈囉市場）" },
-      { id: 14, name: "孔廟前路口" },
-      { id: 15, name: "天府宮停車場" },
-      { id: 16, name: "元帝廟停車場右邊出入口" },
-      { id: 17, name: "元帝廟停車場左邊出入口" }
+      { id: 1, name: "勝利路公廁" }, { id: 2, name: "勝利路工程施工旁" }, { id: 3, name: "勝利路施工處" },
+      { id: 4, name: "勝利路餐廳前" }, { id: 5, name: "空白" }, { id: 6, name: "通天柱" },
+      { id: 7, name: "蓮潭運動中心" }, { id: 8, name: "蓮潭運動中心旁公廁" }, { id: 9, name: "清水師爺前方" },
+      { id: 10, name: "涼亭前" }, { id: 11, name: "截流站" }, { id: 12, name: "哈囉市場（自在蔬食對面）" },
+      { id: 13, name: "孔廟後面（近哈囉市場）" }, { id: 14, name: "孔廟前路口" }, { id: 15, name: "天府宮停車場" },
+      { id: 16, name: "元帝廟停車場右邊出入口" }, { id: 17, name: "元帝廟停車場左邊出入口" }
     ];
 
     const canvas = document.getElementById("wheel-canvas");
     const ctx = canvas.getContext("2d");
-
-    let history = [];
 
     function drawWheel() {
       const rect = canvas.getBoundingClientRect();
@@ -159,50 +126,39 @@
       let targetIndex = Math.floor(Math.random() * stations.length);
       const angle = (2 * Math.PI) / stations.length;
       const targetAngle = angle * targetIndex + angle / 2;
-
-      let spins = 6; // 完整旋轉圈數
+      let spins = 6;
       let totalRotation = spins * 2 * Math.PI + targetAngle;
-
       const duration = 3000;
       const start = performance.now();
 
       function animate(now) {
         const elapsed = now - start;
         const t = Math.min(elapsed / duration, 1);
-        const ease = 1 - Math.pow(1 - t, 3); // easeOutCubic
-
+        const ease = 1 - Math.pow(1 - t, 3);
         rotation = totalRotation * ease;
+
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.translate(canvas.width / 2, canvas.height / 2);
         ctx.rotate(rotation);
         ctx.translate(-canvas.width / 2, -canvas.height / 2);
-
         drawWheel();
 
         if (t < 1) {
           requestAnimationFrame(animate);
         } else {
+          showResult(name, stations[targetIndex].id, stations[targetIndex].name);
           startConfetti();
-          addToHistory(name, stations[targetIndex]);
         }
       }
 
       requestAnimationFrame(animate);
     }
 
-    function addToHistory(name, station) {
-      history.push({ name, station });
-      updateHistory();
-    }
-
-    function updateHistory() {
-      const historyDiv = document.getElementById("history");
-      historyDiv.innerHTML = "<h3>抽籤歷史</h3>";
-      history.forEach(record => {
-        const div = document.createElement("div");
-        div.innerHTML = `${record.name} 抽中：${record.station.id} ${record.station.name}`;
-        historyDiv.appendChild(div);
-      });
+    function showResult(name, id, station) {
+      const resultBox = document.getElementById("result");
+      resultBox.innerText = `${name} 抽中站位：${id} ${station}`;
+      resultBox.style.display = "block";
+      setTimeout(() => { resultBox.style.display = "none"; }, 4000);
     }
 
     function startConfetti() {
@@ -210,7 +166,6 @@
       const ctx = canvas.getContext("2d");
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-
       const colors = ["#ff0000", "#00cc00", "#0000ff", "#ffcc00", "#ff00cc"];
       const particles = Array.from({ length: 120 }, () => ({
         x: Math.random() * canvas.width,
@@ -245,6 +200,8 @@
 
       const duration = 2000;
       const end = Date.now() + duration;
+      const audio = document.getElementById("confetti-sound");
+      audio.play().catch(e => console.warn("音效播放失敗", e));
 
       (function loop() {
         draw();
