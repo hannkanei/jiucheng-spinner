@@ -36,7 +36,6 @@
   <div id="history"></div>
   <audio id="chime" src="chime.mp3" preload="auto"></audio>
   <canvas id="confetti-canvas"></canvas>
-  <audio id="chime" src="chime.mp3" preload="auto"></audio>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script>
     const stations = [
@@ -101,12 +100,22 @@
         }
         result.innerHTML = `<strong>${name}</strong> 抽中了 <strong>${selected.id}. ${selected.name}</strong>`;
         chime.currentTime = 0; chime.play().catch(()=>{});
+        chime.pause();
         chime.currentTime = 0;
-        chime.play().catch(()=>{});
+        chime.play().then(() => {
+          console.log("音效播放成功");
+        }).catch((error) => {
+          console.log("音效播放失敗：", error);
+        });
         drawWheel();
         startConfetti();
-        setTimeout(() => { highlight = []; chime.currentTime = 0;
-        chime.play().catch(()=>{});
+        setTimeout(() => { highlight = []; chime.pause();
+        chime.currentTime = 0;
+        chime.play().then(() => {
+          console.log("音效播放成功");
+        }).catch((error) => {
+          console.log("音效播放失敗：", error);
+        });
         drawWheel(); }, 2000);
         spinning = false;
       }, 5200);
@@ -123,8 +132,13 @@
     }
 
     document.getElementById("spinButton").onclick = spinWheel;
-    chime.currentTime = 0;
-        chime.play().catch(()=>{});
+    chime.pause();
+        chime.currentTime = 0;
+        chime.play().then(() => {
+          console.log("音效播放成功");
+        }).catch((error) => {
+          console.log("音效播放失敗：", error);
+        });
         drawWheel();
   </script>
 </body>
