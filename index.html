@@ -134,8 +134,32 @@
           history.innerHTML += `<div>${name}：${p.id}. ${p.name}</div>`;
         }
         result.innerHTML = `<strong>${name}</strong> 抽中了 <strong>${selected.id}. ${selected.name}</strong>`;
-        drawWheel(); startConfetti();
-        setTimeout(() => { highlightIds = []; drawWheel(); }, 2000);
+        drawWheel();
+
+// 點一下畫面「解鎖音效播放權限」
+document.body.addEventListener('click', () => {
+  const audio = document.getElementById("win-sound");
+  if (audio && audio.paused) {
+    audio.play().then(() => {
+      audio.pause();
+      audio.currentTime = 0;
+    }).catch(() => {});
+  }
+}, { once: true });
+ startConfetti();
+        setTimeout(() => { highlightIds = []; drawWheel();
+
+// 點一下畫面「解鎖音效播放權限」
+document.body.addEventListener('click', () => {
+  const audio = document.getElementById("win-sound");
+  if (audio && audio.paused) {
+    audio.play().then(() => {
+      audio.pause();
+      audio.currentTime = 0;
+    }).catch(() => {});
+  }
+}, { once: true });
+ }, 2000);
         spinning = false;
       }, 5200);
     }
@@ -147,10 +171,34 @@
         availableIcons = [...icons]; rotation = 0;
         canvas.style.transform = "rotate(0deg)";
         result.innerHTML = ""; history.innerHTML = ""; drawWheel();
+
+// 點一下畫面「解鎖音效播放權限」
+document.body.addEventListener('click', () => {
+  const audio = document.getElementById("win-sound");
+  if (audio && audio.paused) {
+    audio.play().then(() => {
+      audio.pause();
+      audio.currentTime = 0;
+    }).catch(() => {});
+  }
+}, { once: true });
+
       }
     };
 
     drawWheel();
+
+// 點一下畫面「解鎖音效播放權限」
+document.body.addEventListener('click', () => {
+  const audio = document.getElementById("win-sound");
+  if (audio && audio.paused) {
+    audio.play().then(() => {
+      audio.pause();
+      audio.currentTime = 0;
+    }).catch(() => {});
+  }
+}, { once: true });
+
   </script>
 </body>
 </html>
