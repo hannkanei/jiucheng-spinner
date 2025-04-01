@@ -53,7 +53,19 @@
     let drawn = [], iconMap = {}, highlight = [], spinning = false, rotation = 0;
     const canvas = document.getElementById("wheel"), ctx = canvas.getContext("2d");
     const result = document.getElementById("result"), history = document.getElementById("history");
-    const chime = document.getElementById("chime");
+    
+        const chime = document.getElementById("chime");
+        if (chime) {
+          try {
+            chime.pause();
+            chime.currentTime = 0;
+            chime.volume = 1.0;
+            chime.play().catch(e => console.log("語音播放失敗：", e));
+          } catch (err) {
+            console.log("播放音效錯誤", err);
+          }
+        }
+
 
     function drawWheel() {
       const center = 250, radius = 230, angle = 2 * Math.PI / stations.length;
