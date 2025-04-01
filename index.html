@@ -53,7 +53,8 @@
     let drawn = [], iconMap = {}, highlight = [], spinning = false, rotation = 0;
     const canvas = document.getElementById("wheel"), ctx = canvas.getContext("2d");
     const result = document.getElementById("result"), history = document.getElementById("history");
-    const chime = document.getElementById("chime");
+    if (!hasPlayedAudio) {
+        const chime = document.getElementById("chime");
 
     function drawWheel() {
       const center = 250, radius = 230, angle = 2 * Math.PI / stations.length;
@@ -76,7 +77,8 @@
 
     function spinWheel() {
       
-      const chime = document.getElementById("chime");
+      if (!hasPlayedAudio) {
+        const chime = document.getElementById("chime");
       if (chime) {
         chime.volume = 1.0;
         chime.play().then(() => {
@@ -92,6 +94,7 @@
       const remaining = stations.filter(s => !drawn.includes(s.id));
       if (remaining.length === 0) return alert("所有站位已抽完！");
       spinning = true;
+      hasPlayedAudio = false;
       const selected = remaining[Math.floor(Math.random() * remaining.length)];
       const index = stations.findIndex(s => s.id === selected.id);
       const anglePer = 360 / stations.length;
