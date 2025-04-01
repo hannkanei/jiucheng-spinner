@@ -75,15 +75,6 @@
     }
 
     function spinWheel() {
-      
-      const chime = document.getElementById("chime");
-      if (chime) {
-        chime.pause();
-        chime.currentTime = 0;
-        chime.volume = 1.0;
-        chime.play().catch(e => console.log("語音播放失敗：", e));
-      }
-
       if (spinning) return;
       const name = document.getElementById("nameInput").value.trim();
       if (!name) return alert("請輸入姓名！");
