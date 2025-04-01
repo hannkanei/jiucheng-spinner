@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>舊城國小蓮潭路跑使命必站轉轉樂</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#5d4037" />
+  <style>
+    html, body {
+      margin:0; padding:0; font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(rgba(254, 250, 224, 0.9), rgba(254, 250, 224, 0.9)),
+                  url('./dragon_runner_bg.jpg') center/cover no-repeat fixed;
+      color:#4e342e; text-align:center;
+    }
+    header { padding:20px 10px 10px; }
+    .title { font-size:22px; font-weight:bold; }
+    .subtitle { font-size:18px; margin-top:5px; }
+    .input-area { margin:15px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
+    #nameInput {
+      padding:10px; font-size:16px; width:200px;
+      border-radius:5px; border:1px solid #aaa;
+    }
+    #spinButton, #resetButton {
+      padding:10px 20px; font-size:16px; background-color:#5d4037; color:white;
+      border:none; border-radius:5px; cursor:pointer;
+    }
+    #resetButton { background-color:#a1887f; margin-top:10px; }
+    #wheel-container {
+      margin:20px auto;
+      max-width:90vw; max-height:90vw;
+      width:500px; height:500px;
+      position:relative;
+    }
+    canvas#wheel {
+      width:100%; height:100%;
+      border-radius:50%; border:10px solid #8d6e63;
+      background: radial-gradient(#fff8e1, #ffe0b2);
+      box-shadow: 0 0 8px rgba(0,0,0,0.3);
+      transition: transform 5s cubic-bezier(0.33, 1, 0.68, 1);
+    }
+    #result { margin-top:20px; font-size:16px; }
+    #history {
+      margin:20px auto; width:90%; max-width:400px;
+      background:#fffde7; border:1px solid #d7ccc8;
+      border-radius:8px; padding:10px; text-align:left;
+    }
+    #confetti-canvas {
+      position: fixed; pointer-events: none;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">舊城國小蓮潭路跑使命必站轉轉樂</div>
+    <div class="subtitle">看看轉到哪個幸運站！</div>
+  </header>
+  <div class="input-area">
+    <input type="text" id="nameInput" placeholder="輸入姓名" />
+    <button id="spinButton">開始抽籤</button>
+  </div>
+  <div id="wheel-container">
+    <canvas id="wheel" width="500" height="500"></canvas>
+  </div>
+  <div id="result"></div>
+  <div id="history"></div>
+  <button id="resetButton">重置抽籤</button>
+  <canvas id="confetti-canvas"></canvas>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script>
+    const stations = [
+      { id: 1, name: "勝利路公廁" }, { id: 2, name: "勝利路工程施工旁" }, { id: 3, name: "勝利路施工處" },
+      { id: 4, name: "勝利路餐廳前" }, { id: 5, name: "空白" }, { id: 6, name: "通天柱" },
+      { id: 7, name: "蓮潭運動中心" }, { id: 8, name: "蓮潭運動中心旁公廁" }, { id: 9, name: "清水師爺前方" },
+      { id: 10, name: "涼亭前" }, { id: 11, name: "截流站" }, { id: 12, name: "哈囉市場（自在蔬食對面）" },
+      { id: 13, name: "孔廟後面（近哈囉市場）" }, { id: 14, name: "孔廟前路口" },
+      { id: 15, name: "天府宮停車場" }, { id: 16, name: "元帝廟停車場右邊出入口" },
+      { id: 17, name: "元帝廟停車場左邊出入口" }
+    ];
+    const pairedStations = { 1:13, 2:14, 3:15, 4:16, 5:17, 13:1, 14:2, 15:3, 16:4, 17:5 };
+    const icons = ["★", "✿", "✔", "✦", "✧", "❤", "❖", "⬤", "⬟", "▲"];
+    let availableIcons = [...icons];
+    let drawnIds = [], drawnIcons = {}, rotation = 0, spinning = false, highlightIds = [];
+    const canvas = document.getElementById("wheel"), ctx = canvas.getContext("2d");
+    const result = document.getElementById("result"), history = document.getElementById("history");
+
+    function drawWheel() {
+      const angle = 2 * Math.PI / stations.length, center = 250, radius = 230;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      stations.forEach((s, i) => {
+        const start = i * angle, end = start + angle;
+        ctx.fillStyle = highlightIds.includes(s.id) ? "#ce93d8" : ["#ffe0b2", "#ffcc80", "#ffb74d"][i % 3];
+        ctx.beginPath(); ctx.moveTo(center, center);
+        ctx.arc(center, center, radius, start, end); ctx.lineTo(center, center); ctx.fill();
+        ctx.save(); ctx.translate(center, center); ctx.rotate(start + angle / 2);
+        ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        ctx.fillStyle = "#4e342e"; ctx.font = "14px sans-serif";
+        ctx.fillText(`${s.id}. ${s.name}`, radius - 50, 0);
+        if (drawnIcons[s.id]) {
+          ctx.fillStyle = "#d32f2f"; ctx.font = "20px serif";
+          ctx.fillText(drawnIcons[s.id], radius - 20, -20);
+        } ctx.restore();
+      });
+    }
+
+    function startConfetti() {
+      const duration = 2000, end = Date.now() + duration;
+      const confettiInstance = confetti.create(document.getElementById('confetti-canvas'), { resize: true });
+      (function frame() {
+        confettiInstance({ particleCount: 7, angle: 60, spread: 55, origin: { x: 0 } });
+        confettiInstance({ particleCount: 7, angle: 120, spread: 55, origin: { x: 1 } });
+        if (Date.now() < end) requestAnimationFrame(frame);
+      })();
+    }
+
+    function spinWheel() {
+      if (spinning) return;
+      const name = document.getElementById("nameInput").value.trim();
+      if (!name) return alert("請輸入姓名！");
+      if (availableIcons.length === 0) return alert("圖示已用完！請重置抽籤。");
+      const remaining = stations.filter(s => !drawnIds.includes(s.id));
+      if (remaining.length === 0) return alert("所有站位已抽完！");
+      spinning = true;
+      const selected = remaining[Math.floor(Math.random() * remaining.length)];
+      const index = stations.findIndex(s => s.id === selected.id);
+      const anglePerItem = 360 / stations.length;
+      rotation = 360 * 5 + (360 - (index * anglePerItem + anglePerItem / 2));
+      canvas.style.transform = `rotate(${rotation}deg)`;
+
+      setTimeout(() => {
+        const icon = availableIcons.shift();
+        drawnIds.push(selected.id); drawnIcons[selected.id] = icon;
+        history.innerHTML += `<div>${name}：${selected.id}. ${selected.name}</div>`;
+        const pair = pairedStations[selected.id]; highlightIds = [selected.id];
+        if (pair && !drawnIds.includes(pair)) {
+          drawnIds.push(pair); drawnIcons[pair] = icon; highlightIds.push(pair);
+          const p = stations.find(s => s.id === pair);
+          history.innerHTML += `<div>${name}：${p.id}. ${p.name}</div>`;
+        }
+        result.innerHTML = `<strong>${name}</strong> 抽中了 <strong>${selected.id}. ${selected.name}</strong>`;
+        const audio = new Audio('./ttsmaker-file-2025-4-2-0-22-36.mp3');
+        audio.play();
+        drawWheel(); startConfetti();
+        setTimeout(() => { highlightIds = []; drawWheel(); }, 2000);
+        spinning = false;
+      }, 5200);
+    }
+
+    document.getElementById("spinButton").onclick = spinWheel;
+    document.getElementById("resetButton").onclick = () => {
+      if (confirm("確定要重置抽籤？")) {
+        drawnIds = []; drawnIcons = {}; highlightIds = [];
+        availableIcons = [...icons]; rotation = 0;
+        canvas.style.transform = "rotate(0deg)";
+        result.innerHTML = ""; history.innerHTML = ""; drawWheel();
+      }
+    };
+
+    drawWheel();
+  </script>
+</body>
+</html>
