@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     html, body {
-  background-image: url('bg.png');
+  background-image: url('background.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed; margin:0; padding:0; font-family: "Segoe UI", sans-serif; background:#fefae0; color:#4e342e; text-align:center; }
@@ -113,6 +113,38 @@
         });
         drawWheel();
 
+// 每次抽中站位時使用不重複圖示
+const iconList = ["★", "◆", "▲", "●", "☀", "✿", "♣", "☘", "♠", "♥", "☁", "☂", "☯", "☕", "✈", "⚑", "♬"];
+let usedIcons = {};
+let iconIndex = 0;
+
+// 將圖示渲染在抽中區塊上（記憶圖示）
+function getIconFor(name) {
+  if (usedIcons[name]) return usedIcons[name];
+  const icon = iconList[iconIndex % iconList.length];
+  usedIcons[name] = icon;
+  iconIndex++;
+  return icon;
+}
+
+// 抽中時給予圖示與閃爍動畫
+function flashSegment(name) {
+  const canvas = document.getElementById("wheelCanvas");
+  const ctx = canvas.getContext("2d");
+  let count = 6;
+  let flashing = true;
+  let flashInterval = setInterval(() => {
+    drawWheel(); // 重繪整個輪盤
+    highlightSegment(name, flashing); // 自訂高亮段落
+    flashing = !flashing;
+    count--;
+    if (count <= 0) clearInterval(flashInterval);
+  }, 200);
+}
+
+// 修改 drawText 方式，讓圖示一起畫上去（請在 drawWheel 中整合）
+
+
 function tryAutoPlayBGM() {
   bgm.volume = 0.5;
   bgm.play().then(() => {
@@ -126,15 +158,7 @@ document.addEventListener("touchstart", tryAutoPlayBGM, { once: true });
 
 
 const bgm = document.getElementById("bgm");
-function toggleBGM() {
-  if (bgm.paused) {
-    bgm.play().catch((err) => {
-      console.log("背景音樂播放失敗", err);
-    });
-  } else {
-    bgm.pause();
-  }
-}
+
 
 
 let hasPlayedVoice = false;
@@ -161,6 +185,38 @@ document.getElementById("nameInput").addEventListener("focus", () => {
         });
         drawWheel();
 
+// 每次抽中站位時使用不重複圖示
+const iconList = ["★", "◆", "▲", "●", "☀", "✿", "♣", "☘", "♠", "♥", "☁", "☂", "☯", "☕", "✈", "⚑", "♬"];
+let usedIcons = {};
+let iconIndex = 0;
+
+// 將圖示渲染在抽中區塊上（記憶圖示）
+function getIconFor(name) {
+  if (usedIcons[name]) return usedIcons[name];
+  const icon = iconList[iconIndex % iconList.length];
+  usedIcons[name] = icon;
+  iconIndex++;
+  return icon;
+}
+
+// 抽中時給予圖示與閃爍動畫
+function flashSegment(name) {
+  const canvas = document.getElementById("wheelCanvas");
+  const ctx = canvas.getContext("2d");
+  let count = 6;
+  let flashing = true;
+  let flashInterval = setInterval(() => {
+    drawWheel(); // 重繪整個輪盤
+    highlightSegment(name, flashing); // 自訂高亮段落
+    flashing = !flashing;
+    count--;
+    if (count <= 0) clearInterval(flashInterval);
+  }, 200);
+}
+
+// 修改 drawText 方式，讓圖示一起畫上去（請在 drawWheel 中整合）
+
+
 function tryAutoPlayBGM() {
   bgm.volume = 0.5;
   bgm.play().then(() => {
@@ -174,15 +230,7 @@ document.addEventListener("touchstart", tryAutoPlayBGM, { once: true });
 
 
 const bgm = document.getElementById("bgm");
-function toggleBGM() {
-  if (bgm.paused) {
-    bgm.play().catch((err) => {
-      console.log("背景音樂播放失敗", err);
-    });
-  } else {
-    bgm.pause();
-  }
-}
+
 
 
 let hasPlayedVoice = false;
@@ -223,6 +271,38 @@ document.getElementById("nameInput").addEventListener("focus", () => {
         });
         drawWheel();
 
+// 每次抽中站位時使用不重複圖示
+const iconList = ["★", "◆", "▲", "●", "☀", "✿", "♣", "☘", "♠", "♥", "☁", "☂", "☯", "☕", "✈", "⚑", "♬"];
+let usedIcons = {};
+let iconIndex = 0;
+
+// 將圖示渲染在抽中區塊上（記憶圖示）
+function getIconFor(name) {
+  if (usedIcons[name]) return usedIcons[name];
+  const icon = iconList[iconIndex % iconList.length];
+  usedIcons[name] = icon;
+  iconIndex++;
+  return icon;
+}
+
+// 抽中時給予圖示與閃爍動畫
+function flashSegment(name) {
+  const canvas = document.getElementById("wheelCanvas");
+  const ctx = canvas.getContext("2d");
+  let count = 6;
+  let flashing = true;
+  let flashInterval = setInterval(() => {
+    drawWheel(); // 重繪整個輪盤
+    highlightSegment(name, flashing); // 自訂高亮段落
+    flashing = !flashing;
+    count--;
+    if (count <= 0) clearInterval(flashInterval);
+  }, 200);
+}
+
+// 修改 drawText 方式，讓圖示一起畫上去（請在 drawWheel 中整合）
+
+
 function tryAutoPlayBGM() {
   bgm.volume = 0.5;
   bgm.play().then(() => {
@@ -236,15 +316,7 @@ document.addEventListener("touchstart", tryAutoPlayBGM, { once: true });
 
 
 const bgm = document.getElementById("bgm");
-function toggleBGM() {
-  if (bgm.paused) {
-    bgm.play().catch((err) => {
-      console.log("背景音樂播放失敗", err);
-    });
-  } else {
-    bgm.pause();
-  }
-}
+
 
 
 let hasPlayedVoice = false;
@@ -264,7 +336,7 @@ document.getElementById("nameInput").addEventListener("focus", () => {
   </script>
 
 
-
+<!-- 已移除播放按鈕 --> style="position: fixed; bottom: 20px; right: 20px; z-index:1000;">播放/暫停音樂</button>
 
 
 
