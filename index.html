@@ -103,26 +103,10 @@
         chime.currentTime = 0; chime.play().catch(()=>{});
         chime.currentTime = 0;
         chime.play().catch(()=>{});
-        
-        const chime = document.getElementById("chime");
-        chime.volume = 1.0;
-        chime.currentTime = 0;
-        chime.play().catch(e => {
-          console.log("音效播放失敗：", e);
-        });
-
         drawWheel();
         startConfetti();
         setTimeout(() => { highlight = []; chime.currentTime = 0;
         chime.play().catch(()=>{});
-        
-        const chime = document.getElementById("chime");
-        chime.volume = 1.0;
-        chime.currentTime = 0;
-        chime.play().catch(e => {
-          console.log("音效播放失敗：", e);
-        });
-
         drawWheel(); }, 2000);
         spinning = false;
       }, 5200);
@@ -141,14 +125,6 @@
     document.getElementById("spinButton").onclick = spinWheel;
     chime.currentTime = 0;
         chime.play().catch(()=>{});
-        
-        const chime = document.getElementById("chime");
-        chime.volume = 1.0;
-        chime.currentTime = 0;
-        chime.play().catch(e => {
-          console.log("音效播放失敗：", e);
-        });
-
         drawWheel();
   </script>
 </body>
