@@ -4,7 +4,15 @@
   <meta charset="UTF-8" />
   <title>舊城國小蓮潭路跑使命必站轉轉樂</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.png">
   <meta name="theme-color" content="#5d4037" />
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
     html, body { margin:0; padding:0; font-family: "Segoe UI", sans-serif; background:#fefae0; color:#4e342e; text-align:center; }
     header { padding:20px 10px 10px; }
@@ -27,20 +35,17 @@
       margin:20px auto; width:90%; max-width:400px; background:#fffde7;
       border:1px solid #d7ccc8; border-radius:8px; padding:10px; text-align:left;
     }
-  
-#confetti-canvas {
-  position: fixed;
-  pointer-events: none;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 999;
-}
-</style>
-
+    #confetti-canvas {
+      position:fixed; pointer-events:none; top:0; left:0; width:100%; height:100%; z-index:999;
+    }
+  </style>
 </head>
-<body >
+<body>
+  
+<audio id="win-sound" preload="auto" muted playsinline>
+  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_90b45b8c9f.mp3" type="audio/mpeg">
+</audio>
+
   <header>
     <div class="title">舊城國小蓮潭路跑使命必站轉轉樂</div>
     <div class="subtitle">看看轉到哪個幸運站！</div>
@@ -55,7 +60,7 @@
   <div id="result"></div>
   <div id="history"></div>
   <button id="resetButton">重置抽籤</button>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <canvas id="confetti-canvas"></canvas>
   <script>
     const stations = [
       { id: 1, name: "勝利路公廁" }, { id: 2, name: "勝利路工程施工旁" }, { id: 3, name: "勝利路施工處" },
@@ -94,7 +99,8 @@
 
     function startConfetti() {
       const duration = 2000, end = Date.now() + duration;
-      const confettiInstance = confetti.create(document.getElementById('confetti-canvas'), { resize: true });
+      const confettiCanvas = document.getElementById('confetti-canvas');
+      const confettiInstance = confetti.create(confettiCanvas, { resize: true });
       (function frame() {
         confettiInstance({ particleCount: 7, angle: 60, spread: 55, origin: { x: 0 } });
         confettiInstance({ particleCount: 7, angle: 120, spread: 55, origin: { x: 1 } });
@@ -127,11 +133,10 @@
           history.innerHTML += `<div>${name}：${p.id}. ${p.name}</div>`;
         }
         result.innerHTML = `<strong>${name}</strong> 抽中了 <strong>${selected.id}. ${selected.name}</strong>`;
-        const text = `${name}，抽中了 ${selected.id} 號，${selected.name}`;
-        const msg = new SpeechSynthesisUtterance(text);
-        msg.lang = 'zh-TW';
-        setTimeout(() => speechSynthesis.speak(msg), 100);
-        drawWheel(); startConfetti();
+        
+drawWheel();
+const audio = document.getElementById('win-sound'); audio.muted = false; audio.play();
+startConfetti();
         setTimeout(() => { highlightIds = []; drawWheel(); }, 2000);
         spinning = false;
       }, 5200);
@@ -140,7 +145,7 @@
     document.getElementById("spinButton").onclick = spinWheel;
     document.getElementById("resetButton").onclick = () => {
       if (confirm("確定要重置抽籤？")) {
-        drawnIds = []; drawnIcons = {}; highlightIds = [];
+        drawnIds = []; drawnIcons = []; highlightIds = [];
         availableIcons = [...icons]; rotation = 0;
         canvas.style.transform = "rotate(0deg)";
         result.innerHTML = ""; history.innerHTML = ""; drawWheel();
@@ -149,6 +154,5 @@
 
     drawWheel();
   </script>
-<canvas id="confetti-canvas"></canvas>
 </body>
 </html>
