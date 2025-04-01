@@ -41,7 +41,7 @@
 
 </style>
 
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
 </head>
 <body >
   <header>
@@ -158,5 +158,48 @@ function spinWheel() {
   </script>
 
 <canvas id="confetti-canvas"></canvas>
+
+<script>
+const confetti = (() => {
+  const canvas = document.createElement('canvas');
+  canvas.setAttribute('id', 'confetti-canvas');
+  Object.assign(canvas.style, {
+    position: 'fixed', pointerEvents: 'none', top: 0, left: 0,
+    width: '100%', height: '100%', zIndex: 999
+  });
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+  const particles = Array.from({length: 150}, () => ({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight - window.innerHeight,
+    r: Math.random() * 6 + 4,
+    d: Math.random() * 30 + 10,
+    color: `hsl(${Math.random() * 360}, 100%, 70%)`,
+    tilt: Math.random() * 10 - 10
+  }));
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      ctx.beginPath();
+      ctx.fillStyle = p.color;
+      ctx.ellipse(p.x, p.y, p.r, p.r / 2, p.tilt, 0, 2 * Math.PI);
+      ctx.fill();
+    });
+    move();
+  }
+  function move() {
+    particles.forEach(p => {
+      p.y += p.d / 10;
+      if (p.y > window.innerHeight) p.y = -10;
+    });
+  }
+  function loop() {
+    draw();
+    requestAnimationFrame(loop);
+  }
+  return () => loop();
+})();
+</script>
+
 </body>
 </html>
