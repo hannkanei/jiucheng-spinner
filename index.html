@@ -54,7 +54,6 @@
   <div id="history"></div>
   <button id="resetButton">重置抽籤</button>
 
-  <!-- 中獎音效 -->
   <audio id="win-sound" src="win.mp3" preload="auto"></audio>
   <canvas id="confetti-canvas"></canvas>
 
@@ -70,7 +69,7 @@
       { id: 17, name: "元帝廟停車場左邊出入口" }
     ];
     const pairedStations = { 1:13, 2:14, 3:15, 4:16, 5:17, 13:1, 14:2, 15:3, 16:4, 17:5 };
-    const icons = ["★", "✿", "✔", "✦", "✧", "❤", "❖", "⬤", "⬟", "▲"];
+    const icons = ["★", "✿", "✔", "✦", "✧", "❤", "❖", "⬤", "⬟", "▲", "🚩", "✖️"];
     let availableIcons = [...icons];
     let drawnIds = [], drawnIcons = {}, rotation = 0, spinning = false, highlightIds = [];
     const canvas = document.getElementById("wheel"), ctx = canvas.getContext("2d");
@@ -95,6 +94,18 @@
       });
     }
 
+    document.body.addEventListener("touchstart", () => {
+      const audio = document.getElementById("win-sound");
+      if (audio && audio.paused) {
+        audio.muted = true;
+        audio.play().then(() => {
+          audio.pause();
+          audio.muted = false;
+          audio.currentTime = 0;
+        }).catch(() => {});
+      }
+    }, { once: true });
+
     function startConfetti() {
       const duration = 2000, end = Date.now() + duration;
       const confettiInstance = confetti.create(document.getElementById('confetti-canvas'), { resize: true });
@@ -106,11 +117,11 @@
     }
 
     function spinWheel() {
-  const winSound = document.getElementById("win-sound");
-  if (winSound) {
-    winSound.currentTime = 0;
-    winSound.play().catch(err => console.warn("音效播放被拒絕：", err));
-  }
+      const winSound = document.getElementById("win-sound");
+      if (winSound) {
+        winSound.currentTime = 0;
+        winSound.play().catch(err => console.warn("音效播放被拒絕：", err));
+      }
 
       if (spinning) return;
       const name = document.getElementById("nameInput").value.trim();
@@ -126,10 +137,6 @@
       rotation += stopAngle; canvas.style.transform = `rotate(${rotation}deg)`;
 
       setTimeout(() => {
-        document.getElementById("win-sound").play().catch(e => {
-          console.warn("音效播放失敗：", e);
-        });
-
         const icon = availableIcons.shift();
         drawnIds.push(selected.id); drawnIcons[selected.id] = icon;
         history.innerHTML += `<div>${name}：${selected.id}. ${selected.name}</div>`;
@@ -140,36 +147,8 @@
           history.innerHTML += `<div>${name}：${p.id}. ${p.name}</div>`;
         }
         result.innerHTML = `<strong>${name}</strong> 抽中了 <strong>${selected.id}. ${selected.name}</strong>`;
-        drawWheel();
-
-// 解鎖 iOS Safari 音效播放權限（第一次觸碰）
-document.body.addEventListener("touchstart", () => {
-  const audio = document.getElementById("win-sound");
-  if (audio && audio.paused) {
-    audio.muted = true;
-    audio.play().then(() => {
-      audio.pause();
-      audio.muted = false;
-      audio.currentTime = 0;
-    }).catch(() => {});
-  }
-}, { once: true });
- startConfetti();
-        setTimeout(() => { highlightIds = []; drawWheel();
-
-// 解鎖 iOS Safari 音效播放權限（第一次觸碰）
-document.body.addEventListener("touchstart", () => {
-  const audio = document.getElementById("win-sound");
-  if (audio && audio.paused) {
-    audio.muted = true;
-    audio.play().then(() => {
-      audio.pause();
-      audio.muted = false;
-      audio.currentTime = 0;
-    }).catch(() => {});
-  }
-}, { once: true });
- }, 2000);
+        drawWheel(); startConfetti();
+        setTimeout(() => { highlightIds = []; drawWheel(); }, 2000);
         spinning = false;
       }, 5200);
     }
@@ -181,38 +160,10 @@ document.body.addEventListener("touchstart", () => {
         availableIcons = [...icons]; rotation = 0;
         canvas.style.transform = "rotate(0deg)";
         result.innerHTML = ""; history.innerHTML = ""; drawWheel();
-
-// 解鎖 iOS Safari 音效播放權限（第一次觸碰）
-document.body.addEventListener("touchstart", () => {
-  const audio = document.getElementById("win-sound");
-  if (audio && audio.paused) {
-    audio.muted = true;
-    audio.play().then(() => {
-      audio.pause();
-      audio.muted = false;
-      audio.currentTime = 0;
-    }).catch(() => {});
-  }
-}, { once: true });
-
       }
     };
 
     drawWheel();
-
-// 解鎖 iOS Safari 音效播放權限（第一次觸碰）
-document.body.addEventListener("touchstart", () => {
-  const audio = document.getElementById("win-sound");
-  if (audio && audio.paused) {
-    audio.muted = true;
-    audio.play().then(() => {
-      audio.pause();
-      audio.muted = false;
-      audio.currentTime = 0;
-    }).catch(() => {});
-  }
-}, { once: true });
-
   </script>
 </body>
 </html>
